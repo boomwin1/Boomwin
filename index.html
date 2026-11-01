@@ -1,0 +1,2074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOOM WIN</title>
+
+<!-- Google Font: Poppins & Great Vibes -->
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+/* THEME VARIABLES */
+:root {
+  --bg-color: #081c1c;
+  --header-bg: #0b1416;
+  --accent-color: #00ff88;
+  --card-bg: #111d22;
+  --border-color: #1a2f35;
+  --text-color: #ffffff;
+  --text-muted: #b0c4de;
+}
+
+[data-theme="cyber"] {
+  --bg-color: #050508;
+  --header-bg: #0c0c14;
+  --accent-color: #00f3ff;
+  --card-bg: #12121f;
+  --border-color: #1f1f3a;
+  --text-color: #ffffff;
+  --text-muted: #a5a5d1;
+}
+
+[data-theme="gold"] {
+  --bg-color: #141108;
+  --header-bg: #1c180b;
+  --accent-color: #d4af37;
+  --card-bg: #221d11;
+  --border-color: #3b311a;
+  --text-color: #ffffff;
+  --text-muted: #d4cbaf;
+}
+
+[data-theme="blue"] {
+  --bg-color: #0b1329;
+  --header-bg: #0f1c3f;
+  --accent-color: #3498db;
+  --card-bg: #152246;
+  --border-color: #20356c;
+  --text-color: #ffffff;
+  --text-muted: #a4b8d6;
+}
+
+[data-theme="silver"] {
+  --bg-color: #121212;
+  --header-bg: #1a1a1a;
+  --card-bg: #1f1f1f;
+  --border-color: #333333;
+  --text-color: #ffffff;
+  --text-muted: #999999;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:var(--bg-color);
+  color:#ffffff !important;
+  padding-bottom:70px;
+  transition:background 0.3s ease, color 0.3s ease;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* INITIAL LOADING SCREEN */
+#pageLoader {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: var(--bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease, visibility 0.5s;
+}
+.dots-loader {
+  display: flex;
+  gap: 12px;
+}
+.dots-loader div {
+  width: 16px;
+  height: 16px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+.dots-loader div:nth-child(1) { animation-delay: -0.32s; }
+.dots-loader div:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* HEADER & TOP BAR */
+header {
+  background: var(--header-bg);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.brand-logo-text {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--accent-color), #d4af37);
+  color: #000; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Great Vibes', cursive; font-size: 24px; font-weight: bold;
+  border: 2px solid var(--accent-color);
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+.header-titles h1 {
+  color: #ffffff;
+  margin: 0;
+  font-size: 15px;
+  letter-spacing: 0.8px;
+  font-weight: 700;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.login-pill {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 10.5px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.login-pill:hover {
+  border-color: var(--accent-color);
+  background: rgba(0, 255, 136, 0.08);
+}
+
+.register-pill {
+  background: linear-gradient(135deg, var(--accent-color), #00b359);
+  color: #000;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 10.5px;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0, 255, 136, 0.25);
+  transition: all 0.25s ease;
+}
+.register-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+}
+
+.wallet-badge {
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.12), rgba(17, 29, 34, 0.95));
+  border: 1px solid var(--accent-color);
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10.5px;
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.wallet-badge:hover { transform: scale(1.03); }
+.wallet-icon-box {
+  width: 22px; height: 22px;
+  background: linear-gradient(135deg, var(--accent-color), #00b359);
+  color: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+.wallet-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.wallet-label {
+  font-size: 7.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.wallet-amount {
+  font-size: 10.5px;
+  color: var(--accent-color);
+  font-weight: 800;
+}
+
+.icon-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: #ffffff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+.icon-btn:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+/* CATEGORY BAR */
+.cat-nav {
+  background: linear-gradient(180deg, var(--header-bg), rgba(11, 20, 22, 0.8));
+  display: flex;
+  overflow-x: auto;
+  padding: 12px 14px;
+  gap: 12px;
+  border-bottom: 1px solid var(--border-color);
+  scrollbar-width: none;
+  box-shadow: inset 0 -4px 10px rgba(0,0,0,0.2);
+}
+.cat-nav::-webkit-scrollbar { display: none; }
+
+.cat-item {
+  flex: 1;
+  min-width: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  gap: 6px;
+  white-space: nowrap;
+  cursor: pointer;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), var(--card-bg));
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 9px 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.cat-item::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  transition: 0.5s;
+}
+.cat-item:hover::before { left: 100%; }
+
+.cat-item span:first-child {
+  font-size: 20px;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  filter: drop-shadow(0 2px 5px rgba(0, 255, 136, 0.4));
+}
+
+.cat-item:hover {
+  color: #fff;
+  border-color: var(--accent-color);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 255, 136, 0.15);
+}
+
+.cat-item.active {
+  color: #000;
+  background: linear-gradient(135deg, var(--accent-color), #00b359);
+  border-color: var(--accent-color);
+  font-weight: 700;
+  box-shadow: 0 6px 20px rgba(0, 255, 136, 0.35);
+  transform: translateY(-2px);
+}
+
+.cat-item.active span:first-child {
+  transform: scale(1.25) rotate(-5deg);
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+}
+
+/* SLIDING / ROTATING HERO BANNER */
+.hero-banner {
+  background: linear-gradient(135deg, rgba(8, 28, 28, 0.88), rgba(11, 20, 22, 0.95)), 
+              url('https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop') no-repeat center center;
+  background-size: cover;
+  padding: 35px 15px;
+  text-align: center;
+  border-bottom: 2px solid var(--accent-color);
+  margin: 10px;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  min-height: 160px;
+}
+
+.hero-slide {
+  display: none;
+  animation: fadeInOut 0.8s ease-in-out;
+}
+.hero-slide.active {
+  display: block;
+}
+
+@keyframes fadeInOut {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--accent-color), #d4af37);
+  color: #000;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 4px 12px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.hero-banner h2 {
+  color: #fff;
+  font-size: 21px;
+  margin: 0 0 6px;
+  font-weight: 800;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.hero-banner p {
+  color: var(--accent-color);
+  font-size: 11.5px;
+  margin: 0 0 14px;
+  font-weight: 600;
+}
+
+.hero-cta-btn {
+  background: linear-gradient(135deg, var(--accent-color), #00cc6a);
+  color: #000;
+  border: none;
+  padding: 9px 22px;
+  border-radius: 25px;
+  font-weight: 800;
+  font-size: 11px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease;
+}
+.hero-cta-btn:hover { transform: scale(1.05); }
+
+/* PROMOTIONS SECTION */
+.section-title {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  margin: 18px 15px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.5px;
+}
+
+.promo-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  padding: 0 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.promo-grid::-webkit-scrollbar { display: none; }
+
+.promo-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.03), var(--card-bg));
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 12px 6px;
+  text-align: center;
+  cursor: pointer;
+  min-width: 68px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.promo-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transition: 0.5s;
+}
+.promo-card:hover::before { left: 100%; }
+
+.promo-card:hover {
+  border-color: var(--accent-color);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 255, 136, 0.2);
+}
+
+.promo-icon {
+  width: 38px;
+  height: 38px;
+  margin: 0 auto 6px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: transform 0.3s ease;
+}
+.promo-card:hover .promo-icon {
+  transform: scale(1.1) rotate(6deg);
+}
+
+.promo-card span {
+  font-size: 9.5px;
+  color: var(--accent-color);
+  font-weight: 700;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* FREE MONEY & BONUS EXPLANATION SECTION */
+.free-money-container{background:var(--card-bg);margin:10px;padding:14px;border-radius:14px;border:1px solid var(--border-color)}
+.free-money-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.free-money-title{display:flex;align-items:center;gap:6px;color:var(--accent-color);font-size:12px;font-weight:700}
+.view-more{color:var(--text-muted);font-size:10px;cursor:pointer}
+
+.bonus-explanation-box {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), var(--header-bg));
+  border: 1px dashed #d4af37;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  color: #fff;
+  font-size: 10.5px;
+  line-height: 1.5;
+}
+.bonus-explanation-box h5 {
+  margin: 0 0 4px;
+  color: #d4af37;
+  font-size: 11px;
+  font-weight: 700;
+}
+.bonus-explanation-box p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.free-money-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fm-card{background:var(--header-bg);border:1px solid var(--border-color);border-radius:8px;padding:10px;display:flex;align-items:center;gap:8px;cursor:pointer;transition: all 0.2s;}
+.fm-card:hover { border-color: var(--accent-color); }
+.fm-icon{font-size:20px;background:var(--card-bg);width:34px;height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center}
+.fm-text h4{margin:0;font-size:11px;color:var(--accent-color);font-weight:700;font-style:italic;}
+.fm-text p{margin:2px 0 0;font-size:9px;color:var(--text-muted)}
+
+/* INVITE SECTION STYLES */
+.invite-section-box {
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.08), var(--card-bg));
+  border: 1px solid var(--accent-color);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 10px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 255, 136, 0.1);
+}
+.invite-section-box h3 {
+  color: var(--accent-color);
+  font-size: 13px;
+  margin: 0 0 4px;
+  font-weight: 700;
+}
+.invite-section-box p {
+  color: var(--text-muted);
+  font-size: 10px;
+  margin: 0 0 10px;
+  line-height: 1.4;
+}
+.invite-link-row {
+  display: flex;
+  background: var(--header-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  align-items: center;
+  padding: 4px;
+}
+.invite-link-input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 10px;
+  padding: 6px;
+  width: 100%;
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+}
+.invite-copy-btn {
+  background: linear-gradient(135deg, var(--accent-color), #00b359);
+  color: #000;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* SPIN WHEEL DESIGN */
+.spin-modal-body {
+  background: var(--bg-color);
+  border-radius: 18px;
+  padding: 15px 8px;
+}
+.wheel-wrapper {
+  position: relative;
+  width: 270px;
+  height: 270px;
+  margin: 15px auto;
+}
+.wheel-outer-ring {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  border: 7px solid #d4af37;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.8);
+  position: relative;
+  padding: 4px;
+  background: var(--card-bg);
+}
+.wheel-dots {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 2;
+}
+.wheel-dots span {
+  position: absolute; width: 5px; height: 5px; background: #fff; border-radius: 50%;
+  top: 50%; left: 50%; margin: -2px;
+}
+.wheel-dots span:nth-child(1) { transform: rotate(0deg) translate(128px); }
+.dots-2 { transform: rotate(45deg) translate(128px) !important; }
+.dots-3 { transform: rotate(90deg) translate(128px) !important; }
+.dots-4 { transform: rotate(135deg) translate(128px) !important; }
+.dots-5 { transform: rotate(180deg) translate(128px) !important; }
+.dots-6 { transform: rotate(225deg) translate(128px) !important; }
+.dots-7 { transform: rotate(270deg) translate(128px) !important; }
+.dots-8 { transform: rotate(315deg) translate(128px) !important; }
+
+.wheel-inner {
+  width: 100%; height: 100%; border-radius: 50%; overflow: hidden;
+  position: relative; transition: transform 4s cubic-bezier(0.15, 0.95, 0.15, 1);
+  background: conic-gradient(
+    #e74c3c 0deg 60deg,
+    #3498db 60deg 120deg,
+    #2ecc71 120deg 180deg,
+    #f39c12 180deg 240deg,
+    #9b59b6 240deg 300deg,
+    #f1c40f 300deg 360deg
+  );
+}
+
+.wheel-pointer-top {
+  position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+  width: 0; height: 0; border-left: 10px solid transparent;
+  border-right: 10px solid transparent; border-top: 20px solid #d4af37;
+  z-index: 10; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+
+.spin-center-gold {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 60px; height: 60px; background: radial-gradient(circle, #f39c12, #d35400);
+  border: 3px solid #f1c40f; border-radius: 50%; color: #fff; font-weight: 800;
+  font-size: 11px; cursor: pointer; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; z-index: 5; outline: none;
+  transition: opacity 0.2s ease;
+}
+.spin-center-gold:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.spin-signin-tag {
+  position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+  background: #e67e22; color: #fff; font-size: 9px; font-weight: 800;
+  padding: 3px 10px; border-radius: 10px; border: 1px solid #fff; z-index: 6; white-space: nowrap;
+}
+
+h2{color:var(--accent-color);text-align:center;margin-top:15px;font-size:16px;font-weight:600}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;padding:10px;max-width:1100px;margin:0 auto}
+.product{background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;padding:8px;text-align:center;}
+.product img{width:100%;height:120px;object-fit:cover;border-radius:6px;}
+.product h3{margin:6px 0 3px;font-size:12px;font-weight:600;color:#ffffff}
+.price{color:var(--accent-color);font-weight:bold;font-size:13px}
+button{border:0;border-radius:5px;padding:6px 8px;margin:2px;cursor:pointer;font-weight:600;font-family:'Poppins',sans-serif;font-size:10px;}
+.add{background:#d4af37;color:#000}
+.order{background:var(--accent-color);color:#000}
+
+#cart{text-align:center;color:var(--accent-color);font-weight:bold;max-width:700px;margin:0 auto;font-size:12px;padding:12px}
+#cartItems p{background:var(--card-bg);padding:8px;border-radius:6px;border:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;margin:5px 0;color:#ffffff;font-size:11px}
+
+/* BOOM SUPPORT SECTION STYLES */
+.boom-support-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 0 12px;
+}
+.support-card {
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.08), var(--card-bg));
+  border: 1px solid var(--accent-color);
+  border-radius: 16px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 6px 20px rgba(0, 255, 136, 0.15);
+  transition: transform 0.3s ease;
+}
+.support-card:hover {
+  transform: translateY(-2px);
+}
+.support-icon-box {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--accent-color), #00b359);
+  color: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.4);
+}
+.support-info h3 {
+  margin: 0 0 3px;
+  font-size: 13px;
+  color: var(--accent-color);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.support-info p {
+  margin: 0 0 8px;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.support-telegram-btn {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(0, 255, 136, 0.12);
+  color: var(--accent-color);
+  border: 1px solid var(--accent-color);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  gap: 5px;
+}
+.support-telegram-btn:hover {
+  background: var(--accent-color);
+  color: #000;
+}
+
+footer{text-align:center;padding:15px;background:var(--header-bg);border-top:1px solid var(--border-color);margin-top:20px}
+.small{color:var(--text-muted);font-size:9px}
+.hidden{display:none!important}
+.status{text-align:center;color:var(--accent-color);padding:8px;font-size:11px}
+
+/* SIDEBAR STYLING */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -280px;
+  width: 280px;
+  height: 100%;
+  background: linear-gradient(145deg, var(--card-bg), var(--header-bg));
+  box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+  transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2000;
+  padding: 16px 14px 60px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto;
+  border-left: 1px solid var(--border-color);
+}
+.sidebar.active { right: 0; }
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+.close-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: #ffffff;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; cursor: pointer;
+  transition: all 0.2s;
+}
+.close-btn:hover { border-color: var(--accent-color); color: var(--accent-color); }
+
+.sidebar-user-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.sidebar-user-box p { margin: 0; font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.sidebar-user-box h4 { margin: 3px 0 0; font-size: 12px; color: var(--accent-color); font-weight: 700; letter-spacing: 1px; }
+
+.sidebar-settings-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.sidebar-setting-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.options-chips-container {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.option-chip {
+  background: var(--card-bg);
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 9.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.option-chip:hover {
+  border-color: var(--accent-color);
+  color: #fff;
+}
+.option-chip.active {
+  background: linear-gradient(135deg, var(--accent-color), #00b359);
+  color: #000;
+  border-color: var(--accent-color);
+  font-weight: 700;
+  box-shadow: 0 3px 10px rgba(0, 255, 136, 0.3);
+}
+
+.sidebar-links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+.sidebar-link-btn {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  color: #ffffff;
+  text-align: left;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 9px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.25s ease;
+}
+.sidebar-link-btn span:first-child {
+  font-size: 16px;
+  width: 26px; height: 26px;
+  background: rgba(0, 255, 136, 0.08);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(0, 255, 136, 0.2);
+}
+.sidebar-link-btn:hover {
+  background: rgba(0, 255, 136, 0.06);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  transform: translateX(3px);
+}
+
+.sidebar-footer-section { padding-top: 10px; border-top: 1px solid var(--border-color); margin-top: auto; }
+.logout-btn-styled {
+  background: linear-gradient(135deg, #ff4757, #ff6b81); color: #fff; border: none;
+  width: 100%; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 11.5px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+  box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+  transition: all 0.2s;
+}
+.logout-btn-styled:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(255, 71, 87, 0.5); }
+
+/* BOTTOM NAVIGATION BAR */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; width: 100%;
+  background: linear-gradient(180deg, var(--header-bg), rgba(11, 20, 22, 0.98));
+  border-top: 1px solid var(--border-color);
+  display: flex; justify-content: space-around; align-items: center;
+  padding: 6px 4px; z-index: 3000; height: 56px;
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.4);
+  backdrop-filter: blur(10px);
+}
+.bottom-nav-item {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  color: var(--text-muted); font-size: 9.5px; font-weight: 600;
+  cursor: pointer; background: transparent; border: none;
+  padding: 4px 8px; border-radius: 10px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  gap: 2px;
+}
+.bottom-nav-item span:first-child {
+  font-size: 16px;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.bottom-nav-item:hover { color: var(--accent-color); }
+.bottom-nav-item.active {
+  color: var(--accent-color);
+  background: rgba(0, 255, 136, 0.08);
+  border: 1px solid rgba(0, 255, 136, 0.25);
+  font-weight: 700;
+  transform: translateY(-2px);
+}
+.bottom-nav-item.active span:first-child {
+  transform: scale(1.2);
+  filter: drop-shadow(0 0 6px var(--accent-color));
+}
+
+/* MODALS */
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:4000}
+.center-modal-content{background:var(--card-bg);border:2px solid var(--accent-color);padding:18px;border-radius:15px;width:90%;max-width:320px;position:relative;text-align:center;}
+.modal-close{position:absolute;top:8px;right:12px;background:none;border:none;color:var(--text-muted);font-size:18px;cursor:pointer}
+
+/* WALLET & PAYMENT MODAL STYLING */
+.wallet-action-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 10px 0;
+}
+.action-btn {
+  background: var(--header-bg);
+  border: 1px solid var(--border-color);
+  color: var(--accent-color);
+  padding: 8px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.action-btn.active, .action-btn:hover {
+  background: var(--accent-color);
+  color: #000;
+  border-color: var(--accent-color);
+}
+
+.payment-methods-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 8px 0;
+}
+.pay-method-card {
+  background: var(--header-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.pay-method-card.selected {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  background: rgba(0, 255, 136, 0.05);
+  font-weight: 700;
+}
+
+.tx-list {
+  max-height: 160px;
+  overflow-y: auto;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+.tx-item {
+  background: var(--header-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+}
+.tx-title { font-weight: 600; color: #fff; margin: 0; font-size: 10px; }
+.tx-date { font-size: 8px; color: var(--text-muted); margin: 2px 0 0; }
+.tx-amount { font-weight: 700; font-size: 11px; }
+.tx-amount.income { color: #00ff88; }
+.tx-amount.expense { color: #ff4757; }
+.tx-amount.pending { color: #ffa502; }
+.tx-amount.rejected { color: #ff4757; }
+
+/* CONGRATULATIONS BONUS POPUP MODAL */
+.bonus-popup-content {
+  background: radial-gradient(circle, #1a2f35 0%, var(--card-bg) 100%);
+  border: 2px solid #d4af37;
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+  animation: popupScale 0.3s ease-out;
+}
+@keyframes popupScale {
+  0% { transform: scale(0.7); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.bonus-trophy {
+  font-size: 45px;
+  margin-bottom: 5px;
+  animation: bounceTrophy 1.5s infinite ease-in-out;
+}
+@keyframes bounceTrophy {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.auth-tabs{display:flex;background:var(--header-bg);border-radius:20px;padding:2px;margin-bottom:8px;}
+.auth-tab{flex:1;background:transparent;border:none;color:var(--text-muted);padding:6px;border-radius:18px;font-weight:600;font-size:11px;cursor:pointer;}
+.auth-tab.active{background:var(--accent-color);color:#000}
+
+.phone-input-group{
+  display:flex;
+  background:var(--header-bg);
+  border:1px solid var(--border-color);
+  border-radius:8px;
+  overflow:hidden;
+  align-items:center;
+  margin-top:3px;
+  transition: all 0.3s ease;
+}
+.phone-input-group:focus-within {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.25);
+}
+.phone-prefix{padding:8px;background:var(--card-bg);color:var(--text-muted);font-size:11px;}
+.phone-input-group input, 
+#authPassword,
+.custom-input {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  margin: 0;
+  background: transparent;
+  padding: 9px;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  width: 100%;
+}
+.auth-input-wrapper {
+  background: var(--header-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin-top: 3px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.auth-input-wrapper:focus-within {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.25);
+}
+
+.green-btn{background:var(--accent-color);color:#000;width:100%;font-weight:700;padding:10px;border-radius:20px;cursor:pointer;font-size:12px;border:none}
+</style>
+</head>
+
+<body>
+
+<!-- INITIAL PAGE LOADER -->
+<div id="pageLoader">
+  <div class="dots-loader"><div></div><div></div><div></div></div>
+</div>
+
+<header>
+  <div class="header-container">
+    <div class="logo-area" onclick="goHome()">
+      <div class="brand-logo-text">B</div>
+      <div class="header-titles">
+        <h1>BOOM WIN</h1>
+      </div>
+    </div>
+    
+    <div class="header-right">
+      <div class="wallet-badge hidden" id="walletBadge" onclick="openWalletModal()">
+        <div class="wallet-icon-box">💳</div>
+        <div class="wallet-info">
+          <span class="wallet-label" data-en="Balance" data-am="ቀሪ ሂሳብ">Balance</span>
+          <span class="wallet-amount"><span id="walletAmt">0.00</span> ETB</span>
+        </div>
+      </div>
+
+      <button class="login-pill" onclick="showAuthModal('login')" data-en="LOGIN" data-am="ግባ">🔒 ግባ</button>
+      <button class="register-pill" onclick="showAuthModal('register')" data-en="REGISTER" data-am="ተመዝገብ">✨ ተመዝገብ</button>
+      <button class="icon-btn" onclick="toggleSidebar()">☰</button>
+    </div>
+  </div>
+</header>
+
+<div class="cat-nav">
+  <button class="cat-item active" onclick="goHome()"><span>🏡</span><span data-en="Home" data-am="መነሻ">መነሻ</span></button>
+  <button class="cat-item" onclick="scrollToSection('products')"><span>⚽</span><span data-en="Sports" data-am="ስፖርት">ስፖርት</span></button>
+  <button class="cat-item" onclick="scrollToSection('cart')"><span>⚡</span><span data-en="Live" data-am="ላይቭ">ላይቭ</span></button>
+  <button class="cat-item" onclick="openSpinModal()"><span>🎮</span><span data-en="Games" data-am="ጨዋታዎች">ጨዋታዎች</span></button>
+  <button class="cat-item" onclick="showCustomAlert('Support via Telegram!');"><span>🎧</span><span data-en="Support" data-am="እርዳታ">እርዳታ</span></button>
+</div>
+
+<!-- SIDEBAR -->
+<div id="sidebar" class="sidebar">
+  <div>
+    <div class="sidebar-header">
+      <h3 style="color:var(--accent-color);margin:0;font-size:14px;font-weight:700;" data-en="Menu" data-am="ማውጫ">Menu</h3>
+      <button class="close-btn" onclick="toggleSidebar()">&times;</button>
+    </div>
+
+    <div id="sidebarUserBox" class="sidebar-user-box hidden">
+      <p data-en="Phone Number" data-am="የተጠቃሚ ስልክ ቁጥር">Phone Number</p>
+      <h4 id="sidebarUserPhone">0900000000</h4>
+    </div>
+
+    <div class="sidebar-settings-box">
+      <div class="sidebar-setting-row">
+        <span data-en="🎨 Theme" data-am="🎨 ገጽታ (Theme)">🎨 Theme</span>
+        <div class="options-chips-container">
+          <button class="option-chip" onclick="changeTheme('default')" id="theme-default">Green</button>
+          <button class="option-chip" onclick="changeTheme('cyber')" id="theme-cyber">Cyber</button>
+          <button class="option-chip" onclick="changeTheme('gold')" id="theme-gold">Gold</button>
+          <button class="option-chip" onclick="changeTheme('blue')" id="theme-blue">Blue</button>
+          <button class="option-chip" onclick="changeTheme('silver')" id="theme-silver">Silver</button>
+        </div>
+      </div>
+
+      <div class="sidebar-setting-row" style="margin-top: 2px;">
+        <span data-en="🌐 Language" data-am="🌐 ቋንቋ (Language)">🌐 Language</span>
+        <div class="options-chips-container">
+          <button class="option-chip" onclick="changeLanguage('am')" id="lang-am">አማርኛ</button>
+          <button class="option-chip" onclick="changeLanguage('en')" id="lang-en">English</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-links">
+      <button class="sidebar-link-btn" onclick="toggleSidebar(); goHome()"><span>🏠</span> <span data-en="Home" data-am="መነሻ">Home</span></button>
+      <button class="sidebar-link-btn" onclick="toggleSidebar(); scrollToSection('products')"><span>🛍️</span> <span data-en="Products" data-am="ዕቃዎች">Products</span></button>
+      <button class="sidebar-link-btn" onclick="toggleSidebar(); scrollToSection('cart')"><span>🛒</span> <span data-en="Cart" data-am="ቅርጫት">Cart</span></button>
+      <button class="sidebar-link-btn" onclick="toggleSidebar(); openSpinModal()"><span>🎁</span> <span data-en="Promotion" data-am="ሽልማቶች">Promotion</span></button>
+    </div>
+  </div>
+
+  <div id="sidebarFooterSection" class="sidebar-footer-section hidden">
+    <button class="logout-btn-styled" onclick="handleLogout()">
+      <span>🚪</span> <span data-en="Logout" data-am="ውጣ (Logout)">Logout</span>
+    </button>
+  </div>
+</div>
+
+<!-- SLIDING HERO BANNER -->
+<section id="home" class="hero-banner">
+  <div class="hero-slide active">
+    <div class="hero-badge" data-en="🔥 Ultimate Betting & Games" data-am="🔥 ምርጥ የቤቲንግ እና ጨዋታዎች">🔥 Ultimate Betting & Games</div>
+    <h2 data-en="WIN BIG EVERY DAY" data-am="ዕለታዊ ትልቅ አሸናፊ ይሁኑ">WIN BIG EVERY DAY</h2>
+    <p data-en="Play Shamo Spin, grab rewards and free bonuses!" data-am="ሻሞ ስፒን ይጫወቱ፣ ሽልማቶችን እና ነፃ ቦነሶችን ይረከቡ!">Play Shamo Spin, grab rewards and free bonuses!</p>
+    <button class="hero-cta-btn" onclick="openSpinModal()" data-en="🎡 Spin Now" data-am="🎡 አሁን Spin ያድርጉ">🎡 Spin Now</button>
+  </div>
+  <div class="hero-slide">
+    <div class="hero-badge" data-en="🎁 50 ETB WELCOME BONUS" data-am="🎁 50 ብር የመነሻ ቦነስ">🎁 50 ETB WELCOME BONUS</div>
+    <h2 data-en="REGISTER & CLAIM BONUS" data-am="ተመዝገቡ እና ቦነሳችሁን ይውሰዱ">REGISTER & CLAIM BONUS</h2>
+    <p data-en="Join Boom Win today and start winning instantly!" data-am="ዛሬውኑ ቦም ዊንን ይቀላቀሉ እና ማሸነፍ ይጀምሩ!">Join Boom Win today and start winning instantly!</p>
+    <button class="hero-cta-btn" onclick="showAuthModal('register')" data-en="✨ Register Now" data-am="✨ አሁን ተመዝገብ">✨ Register Now</button>
+  </div>
+  <div class="hero-slide">
+    <div class="hero-badge" data-en="🚀 COMING SOON" data-am="🚀 በቅርብ ቀን የሚመጡ">🚀 COMING SOON</div>
+    <h2 data-en="ALL GAMES LAUNCHING SOON" data-am="ሁሉም ጌሞች በቅርብ ቀን ይጀምራሉ">ALL GAMES LAUNCHING SOON</h2>
+    <p data-en="Get ready for an incredible gaming experience!" data-am="ለየት ያለ እና አስደናቂ የጨዋታ ተሞክሮ ይጠብቁ!">Get ready for an incredible gaming experience!</p>
+    <button class="hero-cta-btn" onclick="scrollToSection('products')" data-en="🔥 Explore Games" data-am="🔥 ጨዋታዎችን ይመልከቱ">🔥 Explore Games</button>
+  </div>
+</section>
+
+<!-- PROMOTIONS SECTION -->
+<div class="section-title" data-en="🎁 PROMOTIONS" data-am="🎁 ማስተዋወቂያዎች እና ሽልማቶች">🎁 PROMOTIONS</div>
+<div class="promo-grid">
+  <div class="promo-card" onclick="openSpinModal()">
+    <div class="promo-icon" style="background:linear-gradient(135deg, #ff4757, #ff6b81);">🎡</div>
+    <span data-en="Spin & Win" data-am="ስፒን አሸንፍ">Spin & Win</span>
+  </div>
+  <div class="promo-card" onclick="showCustomAlert('Coming Soon!')">
+    <div class="promo-icon" style="background:linear-gradient(135deg, #ffa502, #ff7f50);">📅</div>
+    <span data-en="Coming" data-am="በቅርብ">Coming</span>
+  </div>
+  <div class="promo-card" onclick="showCustomAlert('Coming Soon!')">
+    <div class="promo-icon" style="background:linear-gradient(135deg, #9b59b6, #8e44ad);">🎰</div>
+    <span data-en="Coming" data-am="በቅርብ">Coming</span>
+  </div>
+  <div class="promo-card" onclick="showCustomAlert('Coming Soon!')">
+    <div class="promo-icon" style="background:linear-gradient(135deg, #2ed573, #26af5f);">⚽</div>
+    <span data-en="Coming" data-am="በቅርብ">Coming</span>
+  </div>
+  <div class="promo-card" onclick="showCustomAlert('Coming Soon!')">
+    <div class="promo-icon" style="background:linear-gradient(135deg, #1e90ff, #3742fa);">🎟️</div>
+    <span data-en="Coming" data-am="በቅርብ">Coming</span>
+  </div>
+</div>
+
+<!-- INVITE FRIENDS BONUS SECTION -->
+<div class="invite-section-box">
+  <h3 data-en="👥 INVITE FRIENDS & GET 25 ETB" data-am="👥 ጓደኛዎን ይጋብዙ እና 25 ብር ቦነስ ያግኙ">👥 INVITE FRIENDS & GET 25 ETB</h3>
+  <p data-en="Share your invite link! For every friend who registers, 25.00 ETB will be added instantly to your bonus balance." data-am="የመጋበዣ ሊንክዎን ያጋሩ! እያንዳንዱ ጓደኛ ሲመዘገብ ወዲያውኑ 25.00 ብር ወደ ቦነስ አካውንትዎ ይገባል።">
+    የመጋበዣ ሊንክዎን ያጋሩ! እያንዳንዱ ጓደኛ ሲመዘገብ ወዲያውኑ 25.00 ብር ወደ ቦነስ አካውንትዎ ይገባል።
+  </p>
+  <div class="invite-link-row">
+    <input type="text" id="userInviteLink" class="invite-link-input" readonly value="https://boom-win.vercel.app/?ref=boomwin">
+    <button class="invite-copy-btn" onclick="copyInviteLink()" data-en="Copy Link" data-am="ሊንክ ኮፒ 📂">Copy Link</button>
+  </div>
+</div>
+
+<!-- FREE MONEY & BONUS EXPLANATION SECTION -->
+<div class="free-money-container">
+  <div class="free-money-header">
+    <div class="free-money-title" data-en="🔥 FREE MONEY & BONUSES" data-am="🔥 ነፃ ገንዘብ እና የቦነስ ማብራሪያ">🔥 FREE MONEY & BONUSES</div>
+    <span onclick="openSpinModal()" class="view-more" data-en="View more rewards →" data-am="ተጨማሪ ሽልማቶች →">View more rewards →</span>
+  </div>
+  
+  <div class="bonus-explanation-box">
+    <h5 data-am="💎 የቦነስ አጠቃቀም እና የማውጣት ደንብ (Bonus Rules)">💎 የቦነስ አጠቃቀም እና የማውጣት ደንብ (Bonus Rules)</h5>
+    <p data-am="የሚያስገቡት ገንዘብ ለጨዋታ እና ውርርድ ብቻ የሚያገለግል ሲሆን (Playable Balance)፣ ጨዋታዎችን ተጫውተው ሲያሸንፉ የሚያገኙት ገንዘብ ወደ ማውጣት የሚችሉት ቀሪ ሒሳብ (Withdrawable Balance) ይተላለፋል።">
+      የሚያስገቡት ገንዘብ ለጨዋታ እና ውርርድ ብቻ የሚያገለግል ሲሆን (Playable Balance)፣ ጨዋታዎችን ተጫውተው ሲያሸንፉ የሚያገኙት ገንዘብ ወደ ማውጣት የሚችሉት ቀሪ ሒሳብ (Withdrawable Balance) ይተላለፋል።
+    </p>
+  </div>
+
+  <div class="free-money-grid">
+    <div class="fm-card" onclick="openSpinModal()">
+      <div class="fm-icon">🎡</div>
+      <div class="fm-text">
+        <h4 data-en="Spin & Win" data-am="ስፒን እና አሸንፍ">Spin & Win</h4>
+        <p data-en="Cash & freebets" data-am="ጥሬ ገንዘብ እና ነፃ ውርርድ">Cash & freebets</p>
+      </div>
+    </div>
+    <div class="fm-card" onclick="showCustomAlert(currentLang==='am'?'ሊንክዎን በመጠቀም ጓደኛዎችዎን ይጋብዙ!':'Invite friends using your link!')">
+      <div class="fm-icon">👥</div>
+      <div class="fm-text">
+        <h4 data-en="Invite & Earn" data-am="ጋብዝ እና አትርፍ">Invite & Earn</h4>
+        <p data-en="25 ETB per invite" data-am="በአንድ ሰው 25 ብር">25 ETB per invite</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 id="products" data-en="Our Products" data-am="የእኛ ምርቶች እና አገልግሎቶች">Our Products</h2>
+<p id="loading" class="status"></p>
+<div id="productsList" class="products"></div>
+
+<section id="cart">
+<h2 data-en="Shopping Cart" data-am="የግዢ ቅርጫት">Shopping Cart</h2>
+<p><span data-en="Items in cart: " data-am="በቅርጫቱ ውስጥ ያሉ እቃዎች: ">Items in cart: </span><span id="cartCount">0</span></p>
+<div id="cartItems"></div>
+<p id="cartTotal"></p>
+<button class="order" onclick="orderCart()" style="margin-top: 10px; padding: 8px 16px;" data-en="Order on Telegram" data-am="በቴሌግራም ይዘዙ">Order on Telegram</button>
+</section>
+
+<!-- BOOM WIN SUPPORT SECTION -->
+<div class="boom-support-container">
+  <div class="support-card">
+    <div class="support-icon-box">
+      <!-- Telegram Headset / Earphone SVG Logo -->
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2a10 10 0 0 0-10 10c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
+      </svg>
+    </div>
+    <div class="support-info">
+      <h3 data-en="BOOM WIN SUPPORT" data-am="የቦም ዊን የድጋፍ ማዕከል">BOOM WIN SUPPORT</h3>
+      <p data-en="Need help? Contact our 24/7 support team" data-am="እርዳታ ይፈልጋሉ? የቴሌግራም የድጋፍ ቡድናችንን ያግኙ">Need help? Contact our 24/7 support team</p>
+      <a href="https://t.me/boomwin_support1" target="_blank" class="support-telegram-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.03-1.99 1.27-5.62 3.72-.53.36-1.01.54-1.44.53-.47-.01-1.38-.27-2.06-.49-.83-.27-1.49-.42-1.43-.89.03-.25.38-.51 1.06-.78 4.15-1.81 6.91-3.01 8.28-3.6 3.94-1.68 4.76-1.97 5.29-1.98.12 0 .39.03.56.17.15.12.19.28.21.4.02.12.02.39 0 .53z"/></svg>
+        <span>@boomwin_support1</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- CONGRATULATIONS BONUS POPUP MODAL -->
+<div id="bonusModal" class="modal-overlay hidden" onclick="handleOutsideClick(event, 'bonusModal')">
+  <div class="center-modal-content bonus-popup-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeBonusModal()">&times;</button>
+    <div class="bonus-trophy">🏆</div>
+    <h3 style="color: #d4af37; font-size: 15px; margin: 0 0 4px;" data-en="CONGRATULATIONS!" data-am="እንኳን ደስ አለዎት! 🎉">CONGRATULATIONS!</h3>
+    <p id="bonusModalText" style="font-size: 11px; color: #fff; margin-bottom: 12px; line-height: 1.4;">
+      <span data-am="በተሳካ ሁኔታ በመግባትዎ <b>50.00 ብር</b> የቦነስ ሽልማት አግኝተዋል!">You have successfully received a <b>50.00 ETB</b> bonus reward!</span>
+    </p>
+    <div style="background: rgba(0, 255, 136, 0.1); border: 1px dashed var(--accent-color); padding: 8px; border-radius: 8px; margin-bottom: 12px;">
+      <span style="font-size: 10px; color: var(--text-muted);" data-am="ወደ ቦነስ አካውንትዎ ገብቷል!">Added to your bonus account!</span>
+    </div>
+    <button class="green-btn" onclick="claimBonusAndClose()" data-en="CLAIM & START PLAYING" data-am="ሽልማቱን ተቀበል">CLAIM & START PLAYING</button>
+  </div>
+</div>
+
+<!-- WALLET TRANSACTIONS & PAYMENT MODAL -->
+<div id="walletModal" class="modal-overlay hidden" onclick="handleOutsideClick(event, 'walletModal')">
+  <div class="center-modal-content" onclick="event.stopPropagation()" style="max-width: 350px;">
+    <button class="modal-close" onclick="closeWalletModal()">&times;</button>
+    <div style="font-size: 24px; margin-bottom: 2px;">💳</div>
+    <h3 style="color: var(--accent-color); font-size: 13px; margin: 0;" data-en="My Wallet" data-am="የእርስዎ ዋሌት">My Wallet</h3>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0;">
+      <div style="background: var(--header-bg); border: 1px solid var(--border-color); padding: 6px; border-radius: 8px; text-align: center;">
+        <span style="font-size: 8px; color: var(--text-muted); display: block;" data-am="ማውጣት የሚቻለው">Withdrawable</span>
+        <b style="color: var(--accent-color); font-size: 11px;" id="modalWithdrawableBalance">0.00</b> <span style="font-size: 9px;">ETB</span>
+      </div>
+      <div style="background: var(--header-bg); border: 1px solid var(--border-color); padding: 6px; border-radius: 8px; text-align: center;">
+        <span style="font-size: 8px; color: var(--text-muted); display: block;" data-am="የጨዋታ ቀሪ ሒሳብ">Playable Bal</span>
+        <b style="color: #ffa502; font-size: 11px;" id="modalPlayableBalance">0.00</b> <span style="font-size: 9px;">ETB</span>
+      </div>
+    </div>
+
+    <div class="wallet-action-btns">
+      <button class="action-btn active" id="tabDepositBtn" onclick="switchWalletTab('deposit')" data-en="➕ Deposit" data-am="➕ ገንዘብ አስገባ">➕ Deposit</button>
+      <button class="action-btn" id="tabWithdrawBtn" onclick="switchWalletTab('withdraw')" data-en="➖ Withdraw" data-am="➖ ገንዘብ አውጣ">➖ Withdraw</button>
+    </div>
+
+    <div id="walletFormArea" style="text-align: left; margin-top: 6px;">
+      <label style="font-size: 10px; color: var(--text-muted);" data-en="Select Payment Method" data-am="የክፍያ ዘዴ ይምረጡ">Select Payment Method</label>
+      <div class="payment-methods-grid">
+        <div class="pay-method-card selected" id="methodTelebirr" onclick="selectPaymentMethod('telebirr')">
+          📱 <b>Telebirr</b>
+        </div>
+        <div class="pay-method-card" id="methodCbe" onclick="selectPaymentMethod('cbe')">
+          🏦 <b>Commercial Bank</b>
+        </div>
+      </div>
+
+      <div id="paymentInstructionBox" style="background: var(--header-bg); border: 1px dashed var(--accent-color); padding: 8px 10px; border-radius: 8px; margin: 6px 0; font-size: 10px; color: var(--accent-color); display: flex; justify-content: space-between; align-items: center;">
+        <span>📱 Telebirr Send Money: <b id="phoneToCopy">0901542511</b></span>
+        <button onclick="copyTelebirrPhone()" style="background: var(--accent-color); color: #000; border: none; padding: 3px 8px; border-radius: 4px; font-weight: 700; font-size: 9.5px; cursor: pointer;">📋 Copy</button>
+      </div>
+
+      <div id="txIdContainer">
+        <label style="font-size: 10px; color: var(--text-muted); display: block; margin-top: 4px;" data-en="Transaction ID (TRX)" data-am="የትራንሳክሽን ቁጥር (TRX - በትክክል 10 ፊደል/ቁጥር)">Transaction ID (TRX)</label>
+        <div class="auth-input-wrapper">
+          <input id="walletActionTrxId" type="text" maxlength="10" placeholder="e.g. TR12345678" class="custom-input" oninput="this.value = this.value.toUpperCase()">
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+        <label style="font-size: 10px; color: var(--text-muted);" data-en="Amount (ETB)" data-am="መጠን (ብር)">Amount (ETB)</label>
+        <span id="withdrawLimitHint" class="hidden" style="font-size:9px; color:var(--accent-color); font-weight:700;">ለማውጣት የሚፈቀደው: <b id="maxWithdrawableHint">0.00</b> ETB</span>
+      </div>
+      <div class="auth-input-wrapper">
+        <input id="walletActionAmount" type="number" placeholder="e.g. 100" class="custom-input">
+      </div>
+
+      <button class="green-btn" id="walletActionSubmitBtn" onclick="handleWalletAction()" style="margin-top: 8px;" data-en="PROCEED DEPOSIT" data-am="ገንዘብ አስገባ">PROCEED DEPOSIT</button>
+    </div>
+
+    <div id="walletHistoryArea" class="hidden" style="margin-top: 6px;">
+      <p style="font-size: 10px; font-weight: 700; color: var(--accent-color); margin: 0 0 4px;" data-en="Recent Transactions" data-am="የሂሳብ ዝውውር ታሪክ">Recent Transactions</p>
+      <div class="tx-list" id="txListContainer"></div>
+    </div>
+
+    <button style="background: transparent; border: none; color: var(--text-muted); font-size: 10px; margin-top: 8px; cursor: pointer; text-decoration: underline;" onclick="toggleWalletView()" id="toggleViewBtn" data-en="View History" data-am="ታሪክ አሳይ">View History</button>
+  </div>
+</div>
+
+<!-- SPIN WHEEL MODAL -->
+<div id="spinModal" class="modal-overlay hidden" onclick="handleOutsideClick(event, 'spinModal')">
+  <div class="center-modal-content spin-modal-body" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeSpinModal()">&times;</button>
+    <h2 style="margin-top:0; font-size:16px; color:#fff;">Shamo Spin</h2>
+    <p id="spinSubtitle" style="font-size:10px; color:var(--accent-color); margin-bottom:4px;" data-en="Sign in to spin" data-am="ለማሽከርከር ይግቡ">Sign in to spin</p>
+    
+    <div class="wheel-wrapper">
+      <div class="wheel-pointer-top"></div>
+      <div class="wheel-outer-ring">
+        <div class="wheel-dots">
+          <span></span><span class="dots-2"></span><span class="dots-3"></span><span class="dots-4"></span>
+          <span class="dots-5"></span><span class="dots-6"></span><span class="dots-7"></span><span class="dots-8"></span>
+        </div>
+        <div id="spinWheel" class="wheel-inner"></div>
+      </div>
+      <button class="spin-center-gold" id="spinBtn" onclick="startSpin()">
+        <span style="font-size:11px;">💎</span>
+        <span>SPIN</span>
+      </button>
+      <div id="spinSignInTag" class="spin-signin-tag" data-en="SIGN IN TO SPIN" data-am="ለማሽከርከር ይግቡ">SIGN IN TO SPIN</div>
+    </div>
+
+    <div style="font-size: 9.5px; text-align: left; color: #ffffff; margin-top: 10px; background: var(--header-bg); padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); line-height: 1.4;">
+      <p style="margin: 0 0 4px; font-weight: 700; color: var(--accent-color);">🎨 የሽልማት ቀለሞች መመሪያ (Color Legend)</p>
+      <ul style="margin: 0; padding-left: 15px;">
+        <li><b>🔴 ቀይ (Red)</b>: FREE BET (5 ብር ነፃ ውርርድ)</li>
+        <li><b>🔵 ሰማያዊ (Blue)</b>: 10 ETB BONUS (10 ብር የቦነስ ሂሳብ)</li>
+        <li><b>🟢 አረንጓዴ (Green)</b>: 25 ETB CASH (25 ብር የቦነስ ሽልማት)</li>
+        <li><b>🟠 ብርቱካናማ (Orange)</b>: JACKPOT (50 ብር ጃክፖት ቦነስ)</li>
+        <li><b>🟣 ሃምራዊ (Purple)</b>: CASH BONUS (50 ብር ቀጥታ ወደ ዋናው ዋሌት የሚገባ)</li>
+        <li><b>🟡 ቢጫ (Yellow)</b>: TRY AGAIN (እንደገና ይሞክሩ)</li>
+      </ul>
+    </div>
+    
+    <p id="spinResult" style="color:var(--accent-color); font-weight:bold; font-size:11px; margin-top:4px; min-height:16px;"></p>
+  </div>
+</div>
+
+<!-- CUSTOM ALERT MODAL -->
+<div id="customAlertModal" class="modal-overlay hidden" onclick="handleOutsideClick(event, 'customAlertModal')">
+  <div class="center-modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeCustomAlert()">&times;</button>
+    <div style="font-size: 28px; margin-bottom: 6px;">🔔</div>
+    <h3 style="color: var(--accent-color); font-size: 14px; margin: 0 0 8px;" data-en="Notice" data-am="ማሳሰቢያ">Notice</h3>
+    <p id="customAlertMessage" style="font-size: 11px; color: #fff; margin-bottom: 12px;"></p>
+    <button class="green-btn" onclick="closeCustomAlert()" style="padding: 6px 16px; width: auto;" data-en="OK" data-am="እሺ">OK</button>
+  </div>
+</div>
+
+<!-- AUTH POPUP MODAL -->
+<div id="authModal" class="modal-overlay hidden" onclick="handleOutsideClick(event, 'authModal')">
+  <div class="center-modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+    <div class="auth-tabs">
+      <button id="loginTabBtn" class="auth-tab active" onclick="switchModalTab('login')" data-en="🔒 Login" data-am="🔒 ግባ">🔒 Login</button>
+      <button id="registerTabBtn" class="auth-tab" onclick="switchModalTab('register')" data-en="📝 Register" data-am="📝 ምዝገባ">📝 Register</button>
+    </div>
+    <div style="text-align: left;">
+      <label style="color:var(--text-muted); font-size:10px;" data-en="Phone Number" data-am="ስልክ ቁጥር">Phone Number</label>
+      <div class="phone-input-group">
+        <span class="phone-prefix">+251</span>
+        <input id="authPhone" type="text" maxlength="9" placeholder="912345678">
+      </div>
+      <label style="color:var(--text-muted); font-size:10px; display:block; margin-top:6px;" data-en="Password" data-am="ፓስዎርድ">Password</label>
+      <div class="auth-input-wrapper">
+        <input id="authPassword" type="password" maxlength="6" placeholder="6-digit">
+      </div>
+    </div>
+    <button class="green-btn" id="authSubmitBtn" onclick="handleAuthSubmit()" style="margin-top:12px;" data-en="SIGN IN" data-am="ግባ">SIGN IN</button>
+    <p id="loginMessage" style="color:#ff6b6b; font-size:10px; margin-top:4px;"></p>
+  </div>
+</div>
+
+<!-- BOTTOM NAVIGATION -->
+<div class="bottom-nav">
+  <button class="bottom-nav-item active" onclick="goHome()"><span>🏡</span><span data-en="Home" data-am="መነሻ">መነሻ</span></button>
+  <button class="bottom-nav-item" onclick="scrollToSection('products')"><span>🛍️</span><span data-en="Games" data-am="ጨዋታ">ጨዋታ</span></button>
+  <button class="bottom-nav-item" onclick="scrollToSection('cart')"><span>🧾</span><span data-en="Slip" data-am="ስሊፕ">ስሊፕ</span></button>
+  <button class="bottom-nav-item" onclick="showCustomAlert('Check Bet - Coming Soon!')"><span>🔍</span><span data-en="Check" data-am="ፈልግ">ፈልግ</span></button>
+  <button class="bottom-nav-item" onclick="toggleSidebar()"><span>👤</span><span data-en="Account" data-am="አካውንት">አካውንት</span></button>
+</div>
+
+<footer>
+<p class="small" style="margin:0; color:#ffffff;">© 2026 BOOM WIN. All Rights Reserved.</p>
+</footer>
+
+<script>
+const SUPABASE_URL = "https://aaebtpioagchpgtehjdw.supabase.co";
+const SUPABASE_KEY = "sb_publishable_ctrh9uNkPjJcR2ORe4DTRQ_o82UFucx";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentLang = localStorage.getItem("hanaLang") || "am";
+let currentTheme = localStorage.getItem("hanaTheme") || "default";
+let currentRotation = 0;
+let isSpinning = false;
+
+let currentUserEmail = null;
+let userWithdrawableBalance = 0.00;
+let userPlayableBalance = 0.00; 
+let userBonusBalance = 0.00;
+let transactions = [];
+
+let pendingBonusAmount = 0;
+
+let currentWalletTab = 'deposit'; 
+let selectedPaymentMethod = 'telebirr'; 
+
+let currentSlideIndex = 0;
+function showNextSlide() {
+  const slides = document.querySelectorAll('.hero-slide');
+  if(slides.length === 0) return;
+  slides[currentSlideIndex].classList.remove('active');
+  currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+  slides[currentSlideIndex].classList.add('active');
+}
+setInterval(showNextSlide, 4000);
+
+function playSpinSound() {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    
+    oscillator.type = 'triangle';
+    oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 3.8);
+    
+    gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    gainNode.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 4.0);
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 4.0);
+  } catch(e) {
+    console.log("Audio not supported or blocked");
+  }
+}
+
+window.addEventListener("load", async () => {
+  if(currentTheme !== 'default') {
+    document.documentElement.setAttribute('data-theme', currentTheme);
+  }
+  updateActiveChips();
+  setLanguage(currentLang);
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const refCode = urlParams.get('ref');
+  if(refCode) {
+    localStorage.setItem("boom_ref", refCode);
+  }
+
+  await checkSession();
+
+  setTimeout(() => {
+    const loader = document.getElementById("pageLoader");
+    if(loader) {
+      loader.style.opacity = "0";
+      setTimeout(() => loader.style.display = "none", 400);
+    }
+  }, 600);
+});
+
+async function loadUserData() {
+  if (!currentUserEmail) {
+    userWithdrawableBalance = 0.00;
+    userPlayableBalance = 0.00;
+    userBonusBalance = 0.00;
+    transactions = [];
+    return;
+  }
+
+  try {
+    const { data: remoteTxs, error } = await db
+      .from('transactions')
+      .select('*')
+      .eq('user_email', currentUserEmail)
+      .order('created_at', { ascending: false });
+
+    if (!error && remoteTxs) {
+      let calculatedPlayable = 0;
+      transactions = remoteTxs.map(tx => {
+        let title = tx.type.toLowerCase().includes('deposit') ? 'የገቢ ጥያቄ' : 'የወጪ ጥያቄ';
+        if (tx.type.toLowerCase() === 'deposit' || tx.type.toLowerCase() === 'deposit_pending' || tx.type.toLowerCase() === 'ገቢ') {
+          if(tx.status === 'approved') calculatedPlayable += parseFloat(tx.amount || 0);
+        }
+
+        let displayStatus = tx.status;
+        if(tx.status === 'pending') displayStatus = '⏳ Pending';
+        else if(tx.status === 'approved') displayStatus = '✅ Approved';
+        else if(tx.status === 'rejected') displayStatus = '❌ Rejected';
+
+        return {
+          title: `${title} (${displayStatus})`,
+          amount: parseFloat(tx.amount || 0),
+          type: tx.status === 'approved' ? 'income' : (tx.status === 'rejected' ? 'rejected' : 'pending'),
+          trxId: tx.trx_id || '',
+          date: new Date(tx.created_at).toLocaleString()
+        };
+      });
+      userPlayableBalance = calculatedPlayable;
+    }
+  } catch (e) {
+    console.log("Error loading remote transactions:", e);
+  }
+
+  const savedWithdrawable = localStorage.getItem(`hanaWithdrawable_${currentUserEmail}`);
+  const savedBonus = localStorage.getItem(`hanaBonus_${currentUserEmail}`);
+
+  userWithdrawableBalance = savedWithdrawable ? parseFloat(savedWithdrawable) : 0.00;
+  userBonusBalance = savedBonus ? parseFloat(savedBonus) : 0.00;
+}
+
+function saveUserData() {
+  if (!currentUserEmail) return;
+  localStorage.setItem(`hanaWithdrawable_${currentUserEmail}`, userWithdrawableBalance.toFixed(2));
+  localStorage.setItem(`hanaPlayable_${currentUserEmail}`, userPlayableBalance.toFixed(2));
+  localStorage.setItem(`hanaBonus_${currentUserEmail}`, userBonusBalance.toFixed(2));
+}
+
+function updateWalletDisplay() {
+  const totalBalance = userWithdrawableBalance + userPlayableBalance + userBonusBalance;
+  document.getElementById("walletAmt").textContent = totalBalance.toFixed(2);
+  document.getElementById("modalWithdrawableBalance").textContent = userWithdrawableBalance.toFixed(2);
+  document.getElementById("modalPlayableBalance").textContent = userPlayableBalance.toFixed(2);
+  document.getElementById("maxWithdrawableHint").textContent = userWithdrawableBalance.toFixed(2);
+  saveUserData();
+  renderTransactions();
+}
+
+function renderTransactions() {
+  const container = document.getElementById("txListContainer");
+  if (!container) return;
+
+  if (transactions.length === 0) {
+    container.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-size:10px;" data-en="No transactions yet" data-am="ምንም የሂሳብ ዝውውር የለም">No transactions yet</p>`;
+    return;
+  }
+
+  container.innerHTML = transactions.map(tx => {
+    let amtPrefix = '';
+    if(tx.type === 'income') amtPrefix = '+';
+    else if(tx.type === 'expense') amtPrefix = '-';
+    else if(tx.type === 'pending') amtPrefix = '⏳ ';
+    else if(tx.type === 'rejected') amtPrefix = '❌ ';
+
+    return `
+      <div class="tx-item">
+        <div>
+          <p class="tx-title">${tx.title} ${tx.trxId ? `<span style="font-size:8px; color:var(--accent-color);">(TRX: ${tx.trxId})</span>` : ''}</p>
+          <p class="tx-date">${tx.date}</p>
+        </div>
+        <div class="tx-amount ${tx.type}">
+          ${amtPrefix}${tx.amount.toFixed(2)} ETB
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openWalletModal() {
+  document.getElementById("walletModal").classList.remove("hidden");
+  switchWalletTab('deposit');
+  loadUserData().then(() => updateWalletDisplay());
+}
+function closeWalletModal() {
+  document.getElementById("walletModal").classList.add("hidden");
+}
+
+function switchWalletTab(tab) {
+  currentWalletTab = tab;
+  const depBtn = document.getElementById("tabDepositBtn");
+  const witBtn = document.getElementById("tabWithdrawBtn");
+  const submitBtn = document.getElementById("walletActionSubmitBtn");
+  const instructionBox = document.getElementById("paymentInstructionBox");
+  const txIdContainer = document.getElementById("txIdContainer");
+  const limitHint = document.getElementById("withdrawLimitHint");
+
+  if(tab === 'deposit') {
+    depBtn.classList.add("active");
+    witBtn.classList.remove("active");
+    submitBtn.textContent = currentLang === 'am' ? "ገንዘብ አስገባ (Deposit)" : "PROCEED DEPOSIT";
+    txIdContainer.classList.remove("hidden");
+    limitHint.classList.add("hidden");
+    instructionBox.style.display = "flex";
+    updateInstructionBox();
+  } else {
+    witBtn.classList.add("active");
+    depBtn.classList.remove("active");
+    submitBtn.textContent = currentLang === 'am' ? "ገንዘብ አውጣ (Withdraw)" : "PROCEED WITHDRAW";
+    txIdContainer.classList.add("hidden");
+    limitHint.classList.remove("hidden");
+    instructionBox.style.display = "none";
+  }
+}
+
+function selectPaymentMethod(method) {
+  selectedPaymentMethod = method;
+  document.getElementById("methodTelebirr").classList.toggle("selected", method === 'telebirr');
+  document.getElementById("methodCbe").classList.toggle("selected", method === 'cbe');
+  updateInstructionBox();
+}
+
+function updateInstructionBox() {
+  const instructionBox = document.getElementById("paymentInstructionBox");
+  if (currentWalletTab !== 'deposit') return;
+
+  if (selectedPaymentMethod === 'telebirr') {
+    instructionBox.innerHTML = `
+      <span>📱 Telebirr Send Money: <b id="phoneToCopy">0901542511</b></span>
+      <button onclick="copyTelebirrPhone()" style="background: var(--accent-color); color: #000; border: none; padding: 3px 8px; border-radius: 4px; font-weight: 700; font-size: 9.5px; cursor: pointer;">📋 Copy</button>
+    `;
+    instructionBox.style.color = "var(--accent-color)";
+    instructionBox.style.borderColor = "var(--accent-color)";
+  } else {
+    instructionBox.innerHTML = `<span>🏦 Commercial Bank (CBE): <b>No Agent</b></span>`;
+    instructionBox.style.color = "#ffa502";
+    instructionBox.style.borderColor = "#ffa502";
+  }
+}
+
+function copyTelebirrPhone() {
+  const phoneText = "0901542511";
+  navigator.clipboard.writeText(phoneText).then(() => {
+    showCustomAlert(currentLang === 'am' ? "ስልክ ቁጥሩ ኮፒ ሆኗል! (Copied)" : "Phone number copied!");
+  }).catch(err => {
+    console.error('Could not copy text: ', err);
+  });
+}
+
+function copyInviteLink() {
+  const linkInput = document.getElementById("userInviteLink");
+  linkInput.select();
+  linkInput.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(linkInput.value).then(() => {
+    showCustomAlert(currentLang === 'am' ? "የመጋበዣ ሊንኩ ኮፒ ሆኗል! 🔗" : "Invite link copied!");
+  }).catch(err => {
+    console.error('Copy error:', err);
+  });
+}
+
+async function handleWalletAction() {
+  if (!currentUserEmail) {
+    showCustomAlert(currentLang === 'am' ? "እባክዎ በመጀመሪያ Login ያድርጉ!" : "Please login first!");
+    return;
+  }
+
+  const amountInput = document.getElementById("walletActionAmount");
+  const trxInput = document.getElementById("walletActionTrxId");
+  const amount = parseFloat(amountInput.value);
+
+  if(isNaN(amount) || amount <= 0) {
+    showCustomAlert(currentLang === 'am' ? "እባክዎ ትክክለኛ የብር መጠን ያስገቡ!" : "Please enter a valid amount!");
+    return;
+  }
+
+  if(currentWalletTab === 'deposit') {
+    if(amount < 50 || amount > 15000) {
+      showCustomAlert(currentLang === 'am' ? "የገቢ መጠን ቢያንስ 50 ብር እና ቢበዛ 15,000 ብር መሆን አለበት!" : "Deposit amount must be between 50 and 15,000 ETB!");
+      return;
+    }
+
+    const trxId = trxInput.value.trim();
+    if(trxId.length !== 10) {
+      showCustomAlert(currentLang === 'am' ? "የትራንሳክሽን ቁጥር (TRX ID) በትክክል 10 ፊደል ወይም ቁጥር መሆን አለበት!" : "Transaction ID (TRX) must be exactly 10 characters!");
+      return;
+    }
+
+    const { error } = await db.from('transactions').insert([
+      { 
+        user_email: currentUserEmail, 
+        type: 'deposit_pending', 
+        amount: amount, 
+        trx_id: trxId, 
+        status: 'pending' 
+      }
+    ]);
+
+    if(error) {
+      showCustomAlert("ስህተት ተፈጥሯል: " + error.message);
+      return;
+    }
+
+    showCustomAlert(currentLang === 'am' ? `የገቢ ጥያቄዎ ተመዝግቧል!` : `Deposit request submitted!`);
+    trxInput.value = "";
+  } else {
+    if(amount < 100 || amount > 10000) {
+      showCustomAlert(currentLang === 'am' ? "የወጪ መጠን ቢያንስ 100 ብር እና ቢበዛ 10,000 ብር መሆን አለበት!" : "Withdrawal amount must be between 100 and 10,000 ETB!");
+      return;
+    }
+
+    if(amount > userWithdrawableBalance) {
+      showCustomAlert(currentLang === 'am' ? `ማውጣት የሚችሉት ${userWithdrawableBalance.toFixed(2)} ብር ብቻ ነው!` : `You can only withdraw won balance.`);
+      return;
+    }
+
+    // 1. ወዲያውኑ ከ Withdrawable Balance ላይ መቀነስ
+    userWithdrawableBalance -= amount;
+
+    // 2. በ localStorage ላይ በአዲስ ዋጋ ማከማቸት
+    localStorage.setItem(`hanaWithdrawable_${currentUserEmail}`, userWithdrawableBalance.toFixed(2));
+
+    // 3. ወደ ዳታቤዝ መላክ
+    const { error } = await db.from('transactions').insert([
+      { 
+        user_email: currentUserEmail, 
+        type: 'withdraw', 
+        amount: amount, 
+        status: 'pending' 
+      }
+    ]);
+
+    if(error) {
+      // ስህተት ካጋጠመ ብሩን መመለስ
+      userWithdrawableBalance += amount;
+      localStorage.setItem(`hanaWithdrawable_${currentUserEmail}`, userWithdrawableBalance.toFixed(2));
+      showCustomAlert("ስህተት ተፈጥሯል: " + error.message);
+      return;
+    }
+
+    showCustomAlert(currentLang === 'am' ? `የወጪ ጥያቄዎ ተመዝግቧል! ብሩ ከዋሌትዎ ቀንሷል።` : `Withdrawal request pending!`);
+  }
+
+  amountInput.value = "";
+  updateWalletDisplay();
+}
+
+function toggleWalletView() {
+  const formArea = document.getElementById("walletFormArea");
+  const historyArea = document.getElementById("walletHistoryArea");
+  const toggleBtn = document.getElementById("toggleViewBtn");
+
+  if(formArea.classList.contains("hidden")) {
+    formArea.classList.remove("hidden");
+    historyArea.classList.add("hidden");
+    toggleBtn.textContent = currentLang === 'am' ? "ታሪክ አሳይ" : "View History";
+  } else {
+    formArea.classList.add("hidden");
+    historyArea.classList.remove("hidden");
+    toggleBtn.textContent = currentLang === 'am' ? "ወደ ክፍያ መመለሻ" : "Back to Payment";
+    loadUserData().then(() => renderTransactions());
+  }
+}
+
+function showBonusPopup(bonusAmount, isNewRegistration = false) {
+  pendingBonusAmount = bonusAmount;
+  const msgText = document.getElementById("bonusModalText");
+  if (currentLang === 'am') {
+    msgText.innerHTML = isNewRegistration 
+      ? `በተሳካ ሁኔታ በመመዝገብዎ <b>${bonusAmount.toFixed(2)} ብር</b> የመነሻ ቦነስ አግኝተዋል!`
+      : `በተሳካ ሁኔታ በመግባትዎ <b>${bonusAmount.toFixed(2)} ብር</b> የዕለቱ ቦነስ አግኝተዋል!`;
+  } else {
+    msgText.innerHTML = isNewRegistration 
+      ? `You received a welcome bonus of <b>${bonusAmount.toFixed(2)} ETB</b>!`
+      : `You received a daily login bonus of <b>${bonusAmount.toFixed(2)} ETB</b>!`;
+  }
+  document.getElementById("bonusModal").classList.remove("hidden");
+}
+
+function claimBonusAndClose() {
+  if (pendingBonusAmount > 0) {
+    userBonusBalance += pendingBonusAmount;
+    updateWalletDisplay();
+    pendingBonusAmount = 0;
+  }
+  document.getElementById("bonusModal").classList.add("hidden");
+}
+
+function closeBonusModal() {
+  document.getElementById("bonusModal").classList.add("hidden");
+  pendingBonusAmount = 0;
+}
+
+function changeTheme(theme) {
+  currentTheme = theme;
+  localStorage.setItem("hanaTheme", theme);
+  if(theme === 'default') {
+    document.documentElement.removeAttribute('data-theme');
+  } else {
+    document.documentElement.setAttribute('data-theme', theme);
+  }
+  updateActiveChips();
+}
+
+function changeLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem("hanaLang", lang);
+  setLanguage(lang);
+  updateActiveChips();
+  renderTransactions();
+}
+
+function updateActiveChips() {
+  document.querySelectorAll('.sidebar-setting-row .option-chip').forEach(el => el.classList.remove('active'));
+  document.getElementById(`theme-${currentTheme}`)?.classList.add('active');
+  document.getElementById(`lang-${currentLang}`)?.classList.add('active');
+}
+
+function setLanguage(lang) {
+  document.querySelectorAll("[data-en]").forEach(el => {
+    const text = el.getAttribute(`data-${lang}`);
+    if (text) el.textContent = text;
+  });
+}
+
+function showCustomAlert(msg) {
+  document.getElementById("customAlertMessage").textContent = msg;
+  document.getElementById("customAlertModal").classList.remove("hidden");
+}
+function closeCustomAlert() {
+  document.getElementById("customAlertModal").classList.add("hidden");
+}
+
+function scrollToSection(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+}
+
+function openSpinModal() {
+  document.getElementById("spinModal").classList.remove("hidden");
+  document.getElementById("spinResult").textContent = "";
+}
+function closeSpinModal() {
+  if (isSpinning) return;
+  document.getElementById("spinModal").classList.add("hidden");
+}
+
+const prizes = [
+  { label: "FREE BET", value: 5, angle: 30, weight: 15 },
+  { label: "10 ETB BONUS", value: 10, angle: 90, weight: 10 },
+  { label: "25 ETB CASH", value: 25, angle: 150, weight: 5 },
+  { label: "JACKPOT", value: 50, angle: 210, weight: 3 },
+  { label: "CASH BONUS", value: 50, angle: 270, weight: 1 }, 
+  { label: "TRY AGAIN", value: 0, angle: 330, weight: 66 }
+];
+
+function getWeightedPrize() {
+  let totalWeight = prizes.reduce((sum, p) => sum + p.weight, 0);
+  let randomWeight = Math.random() * totalWeight;
+  for (let p of prizes) {
+    if (randomWeight < p.weight) return p;
+    randomWeight -= p.weight;
+  }
+  return prizes[prizes.length - 1];
+}
+
+async function startSpin() {
+  if (isSpinning) return;
+
+  const {data} = await db.auth.getSession();
+  const user = data.session?.user;
+
+  if (!user) {
+    closeSpinModal();
+    showCustomAlert(currentLang === 'am' ? "እባክዎ ስፒኑን ለማሽከርከር በመጀመሪያ Login ያድርጉ!" : "Please login first to spin!");
+    showAuthModal('login');
+    return;
+  }
+
+  const spinCost = 5.00;
+  if (userPlayableBalance >= spinCost) {
+    userPlayableBalance -= spinCost;
+  } else if (userBonusBalance >= spinCost) {
+    userBonusBalance -= spinCost;
+  } else if (userWithdrawableBalance >= spinCost) {
+    userWithdrawableBalance -= spinCost;
+  } else {
+    showCustomAlert(currentLang === 'am' ? "የሂሳብዎ ቀሪ በቂ አይደለም!" : "Insufficient balance!");
+    return;
+  }
+
+  isSpinning = true;
+  const spinBtn = document.getElementById("spinBtn");
+  if (spinBtn) spinBtn.disabled = true;
+
+  updateWalletDisplay();
+  playSpinSound();
+
+  const wheel = document.getElementById("spinWheel");
+  const resultText = document.getElementById("spinResult");
+  resultText.textContent = currentLang === 'am' ? "እየተሽከረከረ ነው..." : "Spinning...";
+
+  const wonItem = getWeightedPrize();
+  const extraSpins = 5 * 360; 
+  const targetAngle = (360 - wonItem.angle) % 360;
+  
+  const currentMod = currentRotation % 360;
+  let diff = targetAngle - currentMod;
+  if (diff < 0) diff += 360;
+
+  currentRotation = currentRotation + extraSpins + diff;
+  wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+  setTimeout(() => {
+    if (wonItem.value > 0) {
+      userWithdrawableBalance += wonItem.value;
+      updateWalletDisplay();
+      resultText.textContent = currentLang === 'am' ? `እንኳን ደስ አለዎት! ${wonItem.label} አሸንፈዋል! 🎉` : `Congratulations! You won ${wonItem.label}! 🎉`;
+    } else {
+      resultText.textContent = currentLang === 'am' ? `አልተሳካም (TRY AGAIN)!` : `Try again!`;
+    }
+    isSpinning = false;
+    if (spinBtn) spinBtn.disabled = false;
+  }, 4000);
+}
+
+function goHome(){ window.scrollTo({ top: 0, behavior: 'smooth' }); }
+function toggleSidebar(){ document.getElementById("sidebar").classList.toggle("active"); }
+
+function showAuthModal(mode){
+  document.getElementById("authModal").classList.remove("hidden");
+  switchModalTab(mode);
+}
+function switchModalTab(mode){
+  isRegisterMode = (mode === 'register');
+  document.getElementById("loginTabBtn").classList.toggle("active", !isRegisterMode);
+  document.getElementById("registerTabBtn").classList.toggle("active", isRegisterMode);
+  document.getElementById("authSubmitBtn").textContent = isRegisterMode ? (currentLang==='am'?"ተመዝገብ":"REGISTER") : (currentLang==='am'?"ግባ":"SIGN IN");
+  document.getElementById("loginMessage").textContent = "";
+}
+function closeAuthModal(){ document.getElementById("authModal").classList.add("hidden"); }
+
+function handleOutsideClick(e, id){
+  if(e.target.id === id) {
+    if(id === 'spinModal' && isSpinning) return;
+    document.getElementById(id).classList.add("hidden");
+  }
+}
+
+let isRegisterMode = false;
+async function handleAuthSubmit(){
+  const phone = document.getElementById("authPhone").value.trim();
+  const password = document.getElementById("authPassword").value.trim();
+  const msg = document.getElementById("loginMessage");
+
+  if(phone.length !== 9 || !phone.startsWith('9')){
+    msg.textContent = currentLang==='am' ? "እባክዎ ትክክለኛ ስልክ ቁጥር (በ 9 የሚጀምር 9 አኃዝ) ያስገቡ።" : "Enter valid 9-digit phone.";
+    return;
+  }
+
+  if(password.length !== 6){
+    msg.textContent = currentLang==='am' ? "ፓስዎርድ 6 አኃዝ መሆን አለበት።" : "Password must be 6 digits.";
+    return;
+  }
+
+  const email = `eth${phone}@boomwin.com`;
+  msg.textContent = currentLang==='am' ? "እየተሰራ ነው..." : "Processing...";
+
+  if(isRegisterMode){
+    const {error} = await db.auth.signUp({ email, password });
+    if(error) {
+      msg.textContent = error.message;
+    } else {
+      currentUserEmail = email;
+      await loadUserData();
+      let welcomeBonus = 50.00; 
+      msg.style.color = "var(--accent-color)";
+      msg.textContent = currentLang==='am' ? "ምዝገባው ተሳክቷል!" : "Registered successfully!";
+      setTimeout(() => {
+        closeAuthModal();
+        checkSession();
+        showBonusPopup(welcomeBonus, true);
+      }, 1000);
+    }
+  } else {
+    const {error} = await db.auth.signInWithPassword({ email, password });
+    if(error) {
+      msg.style.color = "#ff6b6b";
+      msg.textContent = currentLang==='am' ? "ቁጥር ወይም ፓስዎርድ ተሳስቷል!" : "Invalid credentials.";
+    } else {
+      msg.style.color = "var(--accent-color)";
+      msg.textContent = currentLang==='am' ? "በተሳካ ሁኔታ ገብተዋል!" : "Successfully logged in!";
+      setTimeout(() => {
+        closeAuthModal();
+        checkSession();
+      }, 1000);
+    }
+  }
+}
+
+async function handleLogout(){
+  await db.auth.signOut();
+  currentUserEmail = null;
+  userWithdrawableBalance = 0.00;
+  userPlayableBalance = 0.00;
+  userBonusBalance = 0.00;
+  transactions = [];
+  checkSession();
+  toggleSidebar();
+  showCustomAlert(currentLang==='am' ? "በተሳካ ሁኔታ ወጥተዋል!" : "Successfully logged out!");
+}
+
+async function checkSession(){
+  const {data} = await db.auth.getSession();
+  const user = data.session?.user;
+  
+  if(user && user.email){
+    currentUserEmail = user.email;
+    await loadUserData(); 
+    
+    const realPhone = user.email.replace('eth', '').split('@')[0];
+    const fullPhone = `0${realPhone}`;
+    
+    document.getElementById("userInviteLink").value = `https://boom-win.vercel.app/?ref=${realPhone}`;
+    document.getElementById("walletBadge").classList.remove("hidden");
+    document.querySelectorAll('.login-pill, .register-pill').forEach(el => el.classList.add("hidden"));
+    document.getElementById("sidebarUserBox").classList.remove("hidden");
+    document.getElementById("sidebarUserPhone").textContent = fullPhone;
+    document.getElementById("sidebarFooterSection").classList.remove("hidden");
+    document.getElementById("spinSignInTag")?.classList.add("hidden");
+    document.getElementById("spinSubtitle").textContent = currentLang==='am' ? "መልካም እድል!" : "Good luck!";
+  } else {
+    currentUserEmail = null;
+    userWithdrawableBalance = 0.00;
+    userPlayableBalance = 0.00;
+    userBonusBalance = 0.00;
+    transactions = [];
+
+    document.getElementById("userInviteLink").value = `https://boom-win.vercel.app/?ref=boomwin`;
+    document.getElementById("walletBadge").classList.add("hidden");
+    document.querySelectorAll('.login-pill, .register-pill').forEach(el => el.classList.remove("hidden"));
+    document.getElementById("sidebarUserBox").classList.add("hidden");
+    document.getElementById("sidebarFooterSection").classList.add("hidden");
+    document.getElementById("spinSignInTag")?.classList.remove("hidden");
+    document.getElementById("spinSubtitle").textContent = currentLang==='am' ? "ለማሽከርከር ይግቡ" : "Sign in to spin";
+  }
+  updateWalletDisplay();
+}
+</script>
+
+</body>
+</html>
